@@ -1,0 +1,18 @@
+{
+    "name": "root/backend",
+    "authors": [
+        {
+            "name": "Alexander Titenko",
+            "email": "deathstalker7976@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "wanfeiyy/dd": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "It20Academy\\App\\": "src/"
+        }
+    }
+}

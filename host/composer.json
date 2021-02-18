@@ -6,7 +6,9 @@
             "email": "deathstalker7976@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "ext-pdo": "*"
+    },
     "require-dev": {
         "wanfeiyy/dd": "^1.0"
     },

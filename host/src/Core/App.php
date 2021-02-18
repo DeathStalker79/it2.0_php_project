@@ -4,7 +4,6 @@ namespace It20Academy\App\Core;
 
 class App
 {
-
     public function run()
     {
         $request = new Request();
@@ -19,7 +18,7 @@ class App
         $method =  $request->getMethod();
 
         $controller = new $controllerName;
-        $controller->$method();
 
+        $controller->$method();
     }
 }

@@ -4,23 +4,22 @@ namespace It20Academy\App\Core;
 
 class Request 
 {
-    private $controller = 'IndexController';
+    private string $controller = 'Index';
 
-    private $method = 'index';
+    private string $method = 'index';
 
     public function __construct()
     {
         $uri = explode('/', $_SERVER['REQUEST_URI']);
         $uri = array_diff($uri, []);
 
-        if(isset($uri[1])) {
+        if(isset($uri[1]) && ! empty($uri[1])) {
             $this->controller = ucfirst($uri[1]);
         }
+
         if(isset($uri[2])) {
             $this->method = $uri[2];
         }
-
-//        $this->validateCommand();
     }
 
     public function validateCommand(): bool
@@ -44,6 +43,7 @@ class Request
     {
         return "It20Academy\App\Controllers\\{$this->controller}Controller";
     }
+
     public function getMethod(): string
     {
         return $this->method;

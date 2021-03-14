@@ -9,6 +9,8 @@ use It20Academy\App\Models\Authors;
 use It20Academy\App\Models\Category;
 use It20Academy\App\Models\Post;
 use It20Academy\App\Models\Statuses;
+use It20Academy\App\Models\Filters;
+use It20Academy\App\Models\Products;
 use PDO;
 
 class PostsController
@@ -141,23 +143,9 @@ class PostsController
         $stmt->execute();
         $this->index();
     }
-
-//    public function delete()
-//    {
-//        $posts = Post::all();
-//        $categories = Category::allCategories();
-//        $authors = Authors::allAuthors();
-//        $statuses = Statuses::allStatuses();
-//        $errors = $this->errors;
-//
-//        echo View::render('posts-delete', compact('posts', 'authors', 'statuses', 'categories', 'errors'));
-//    }
-
     public function delete()
     {
         $id = $this->getIdFromUrl();
-//dd($id);
-//        dd($_POST);
         $dbh = (new Db())->getHandler();
         $stmt = $dbh->prepare('DELETE FROM `posts` WHERE id = :id');
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -171,8 +159,28 @@ class PostsController
         $authors = Authors::allAuthors();
         $statuses = Statuses::allStatuses();
 
-        echo View::render('posts-table', compact('posts', 'authors', 'statuses', 'categories'));
+        echo json_encode($posts);
+
+//        echo View::render('posts-table', compact('posts', 'authors', 'statuses', 'categories'));
     }
+
+    public function filters() {
+        $id = $this->getIdFromUrl();
+        $filters = Filters::allFilters($id);;
+        echo json_encode($filters);
+    }
+
+    public function products() {
+        $rest_json = file_get_contents("php://input");
+        $_POST = json_decode($rest_json, true);
+        $id = $this->getIdFromUrl();
+        $filters= $_POST['filters'] ?? null;
+        $price = $_POST['price'] ?? null;
+        $products = Products::allProducts($id, $filters, $price);
+
+        echo json_encode($products);
+    }
+
     public function read(){
         $dbh = (new Db())->getHandler();
         $stmt = $dbh->prepare('SELECT * FROM `posts`');

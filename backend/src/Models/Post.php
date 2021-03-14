@@ -6,35 +6,44 @@ use It20Academy\App\Core\Db;
 use PDO;
 class Post
 {
-    private int $id;
-    private string $title;
-    private int $author;
-    private int $status;
-    private int $category;
-    private string $img;
-    private string $content;
+    public int $id;
+    public string $name;
+    public string $type;
+    public string $img;
+    public string $description;
+    public string $createdAt;
+    public string $updatedAt;
+    public string $productsCount;
+
+//    public string $title;
+//    public int $author;
+//    public int $status;
+//    public int $category;
+//    public string $img;
+//    public string $content;
 
     public static function all() : array
     {
         $dbh = (new Db())->getHandler();
-//        dd($dbh);
-        $statement = $dbh->query('select * from posts');
+        $statement = $dbh->query('SELECT details.*, COUNT(details.id) as products_count FROM `details` JOIN `products` ON details.id = products.detail_id GROUP BY details.id');
         $initialPosts = $statement->fetchAll();
 
         return array_map(function($initialPost){
             $post = new self; // $post = new Post;
             $post->setId($initialPost['id']);
-            $post->setTitle($initialPost['title']);
-            $post->setAuthor($initialPost['author_id']);
-            $post->setStatus($initialPost['status_id']);
-            $post->setCategory($initialPost['category_id']);
+            $post->setName($initialPost['name']);
+            $post->setType($initialPost['type']);
             $post->setImg($initialPost['img']);
-            $post->setContent($initialPost['content']);
+            $post->setDescription($initialPost['description']);
+            $post->setCreatedAt($initialPost['created_at']);
+            $post->setUpdatedAt($initialPost['updated_at']);
+            $post->setProductsCount($initialPost['products_count']);
 
 
             return $post;
         }, $initialPosts);
     }
+
 
     public static function findId($id): array
     {
@@ -58,15 +67,9 @@ class Post
             }
         });
     }
-
-    public function setTitle(string $title): void
+    public function setId(int $id): void
     {
-        $this->title = $title;
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
+        $this->id = $id;
     }
 
     public function getId(): int
@@ -74,39 +77,64 @@ class Post
         return $this->id;
     }
 
-    public function setId(int $id): void
+    public function setName(string $name): void
     {
-        $this->id = $id;
+        $this->name = $name;
     }
 
-    public function setAuthor(int $author): void
+    public function getName(): string
     {
-        $this->author = $author;
+        return $this->name;
     }
 
-    public function getAuthor(): int
+    public function setProductsCount(string $productsCount): void
     {
-        return $this->author;
+        $this->productsCount = $productsCount;
     }
 
-    public function setStatus(int $status): void
+    public function getProductsCount(): string
     {
-        $this->status = $status;
+        return $this->productsCount;
     }
 
-    public function getStatus(): int
+    public function getType(): string
     {
-        return $this->status;
+        return $this->type;
     }
 
-    public function setCategory(int $category): void
+    public function setType(string $type): void
     {
-        $this->category = $category;
+        $this->type = $type;
     }
 
-    public function getCategory(): int
+    public function setDescription(string $description): void
     {
-        return $this->category;
+        $this->description = $description;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setCreatedAt(string $createdAt): void
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    public function getCreatedAt(): string
+    {
+        return $this->createdAt;
+    }
+
+    public function setUpdatedAt(string $updatedAt): void
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    public function getUpdatedAt(): string
+    {
+        return $this->updatedAt;
     }
 
     public function setImg(string $img): void
@@ -119,15 +147,15 @@ class Post
         return $this->img;
     }
 
-    public function setContent(string $content): void
-    {
-        $this->content = $content;
-    }
-
-    public function getContent(): string
-    {
-        return $this->content;
-    }
+//    public function setContent(string $content): void
+//    {
+//        $this->content = $content;
+//    }
+//
+//    public function getContent(): string
+//    {
+//        return $this->content;
+//    }
     function cutContent(int $maxsymbol= 200){
         $str = self::getContent();
         if ($maxsymbol < mb_strlen($str)) {
